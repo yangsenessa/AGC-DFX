@@ -1,0 +1,233 @@
+dfx stop
+set -e
+
+echo "===========SETUP tokens========="
+dfx start --background --clean
+dfx identity use univoicetest
+echo "===========Prepared Univoice Tokens===================="
+dfx deploy icrc1_ledger_canister --argument "(variant {
+  Init = record {
+    token_symbol = \"UNIVOICE\";
+    token_name = \"L-UNIVOICE\";
+    minting_account = record {
+      owner = principal \"$(dfx identity --identity anonymous get-principal)\"
+    };
+    transfer_fee = 10_000;
+    metadata = vec {};
+    initial_balances = vec {
+      record {
+        record {
+          owner = principal \"$(dfx identity --identity default get-principal)\";
+        };
+        10_000_000_000;
+      };
+    };
+    archive_options = record {
+      num_blocks_to_archive = 1000;
+      trigger_threshold = 2000;
+      controller_id = principal \"$(dfx identity --identity anonymous get-principal)\";
+    };
+    feature_flags = opt record {
+      icrc2 = true;
+    };
+  }
+})"
+
+dfx deploy icrc1_index_canister --argument '(opt variant { Init = record { ledger_id = principal "mxzaz-hqaaa-aaaar-qaada-cai"} })'
+
+dfx canister call icrc1_ledger_canister icrc1_balance_of "(record {
+  owner = principal \"$(dfx identity --identity default get-principal)\";
+})"
+
+echo "===========SETUP DONE========="
+dfx deploy  univoice-vmc-backend 
+dfx deploy  univoice-vmc-frontend
+echo "========  MUGC-AGC  ========" 
+dfx identity use univoicetest
+dfx deploy  mugc-agc-backend 
+
+echo "========update contract======"
+dfx canister call mugc-agc-backend update_minting_contract "(
+   record {
+      poll_account=\"mxzaz-hqaaa-aaaar-qaada-cai\";
+      nft_collection_id=\"bkyz2-fmaaa-aaaaa-qaaaq-cai\";
+      token_block=1000
+   }
+)"
+
+
+echo  "========DEPLOY NFT=========="
+cd icrc_nft.mo
+dfx identity use alice
+ALICE_PRINCIPAL=$(dfx identity get-principal)
+
+dfx identity use bob
+BOB_PRINCIPAL=$(dfx identity get-principal)
+
+
+dfx identity use icrc7_deployer
+
+ADMIN_PRINCIPAL=$(dfx identity get-principal)
+dfx identity use univoicetest
+ADMIN_PRINCIPAL=$(dfx identity get-principal)
+
+dfx deploy icrc7 --argument 'record {icrc7_args = null; icrc37_args =null; icrc3_args =null;}' --mode reinstall
+ICRC7_CANISTER=$(dfx canister id icrc7)
+echo $ICRC7_CANISTER
+
+dfx canister call icrc7 init
+
+
+dfx canister call icrc7 icrcX_mint "(
+  vec {
+    record {
+      token_id = 0 : nat;
+      owner = opt record { owner = principal \"$ICRC7_CANISTER\"; subaccount = null;};
+      metadata = variant {
+        Map = vec {
+          record { \"icrc97:metadata\"; variant { Map = vec {
+            record { \"name\"; variant { Text = \"Image 1\" } };
+            record { \"description\"; variant { Text = \"A beautiful space image from NASA.\" } };
+            record { \"assets\"; variant { Array = vec {
+              variant { Map = vec {
+                record { \"url\"; variant { Text = \"https://images-assets.nasa.gov/image/PIA18249/PIA18249~orig.jpg\" } };
+                record { \"mime\"; variant { Text = \"image/jpeg\" } };
+                record { \"purpose\"; variant { Text = \"icrc97:image\" } }
+              }}
+            }}}
+          }}}
+        }
+      };
+      memo = opt blob \"\00\01\";
+      override = true;
+      created_at_time = null;
+    };
+    record {
+      token_id = 1 : nat;
+      owner = opt record { owner = principal \"$ICRC7_CANISTER\"; subaccount = null;};
+      metadata = variant {
+        Map = vec {
+          record { \"icrc97:metadata\"; variant { Map = vec {
+            record { \"name\"; variant { Text = \"Image 2\" }};
+            record { \"description\"; variant { Text = \"Another stunning NASA image.\" } };
+            record { \"assets\"; variant { Array = vec {
+              variant { Map = vec {
+                record { \"url\"; variant { Text = \"https://images-assets.nasa.gov/image/GSFC_20171208_Archive_e001465/GSFC_20171208_Archive_e001465~orig.jpg\" } };
+                record { \"mime\"; variant { Text = \"image/jpeg\" } };
+                record { \"purpose\"; variant { Text = \"icrc97:image\" } }
+              }}
+            }}}
+          }}}
+        }
+      };
+      memo = opt blob \"\00\01\";
+      override = true;
+      created_at_time = null;
+    };
+    record {
+      token_id = 2 : nat;
+      owner = opt record { owner = principal \"$ICRC7_CANISTER\"; subaccount = null;};
+      metadata = variant {
+        Map = vec {
+          record { \"icrc97:metadata\"; variant { Map = vec {
+            record { \"name\"; variant { Text = \"Image 3\" } };
+            record { \"description\"; variant { Text = \"Hubble sees the wings of a butterfly.\" } };
+            record { \"assets\"; variant { Array = vec {
+              variant { Map = vec {
+                record { \"url\"; variant { Text = \"https://images-assets.nasa.gov/image/hubble-sees-the-wings-of-a-butterfly-the-twin-jet-nebula_20283986193_o/hubble-sees-the-wings-of-a-butterfly-the-twin-jet-nebula_20283986193_o~orig.jpg\" } };
+                record { \"mime\"; variant { Text = \"image/jpeg\" } };
+                record { \"purpose\"; variant { Text = \"icrc97:image\" } }
+              }}
+            }}}
+          }}}
+        }
+      };
+      memo = opt blob \"\00\01\";
+      override = true;
+      created_at_time = null;
+    };
+    record {
+      token_id = 3 : nat;
+      owner = opt record { owner = principal \"$ICRC7_CANISTER\"; subaccount = null;};
+      metadata = variant {
+        Map = vec {
+          record { \"icrc97:metadata\"; variant { Map = vec {
+            record { \"name\"; variant { Text = \"Image 4\" } };
+            record { \"description\"; variant { Text = \"Another beautiful image from NASA archives.\" } };
+            record { \"assets\"; variant { Array = vec {
+              variant { Map = vec {
+                record { \"url\"; variant { Text = \"https://images-assets.nasa.gov/image/GSFC_20171208_Archive_e001518/GSFC_20171208_Archive_e001518~orig.jpg\" } };
+                record { \"mime\"; variant { Text = \"image/jpeg\" } };
+                record { \"purpose\"; variant { Text = \"icrc97:image\" } }
+              }}
+            }}}
+          }}}
+        }
+      };
+      memo = opt blob \"\00\01\";
+      override = true;
+      created_at_time = null;
+    };
+  }
+)"
+
+dfx canister call icrc7 icrc7_tokens_of "(record { owner = principal \"$ICRC7_CANISTER\"; subaccount = null;},null,null)"
+
+#All tokens should be owned by the canister
+echo "All tokens should be owned by the canister"
+dfx canister call icrc7 icrc7_tokens_of "(record { owner = principal \"$ICRC7_CANISTER\"; subaccount = null;},null,null)"
+
+#Should be approved to transfer
+echo "Should be approved to transfer"
+dfx canister call icrc7 icrc37_is_approved "(vec{record { spender=record {owner = principal \"$ADMIN_PRINCIPAL\"; subaccount = null;}; from_subaccount=null; token_id=0;}})" --query
+
+#Check that the owner is spender
+echo "Check that the owner is spender"
+dfx canister call icrc7 icrc37_get_collection_approvals "(record { owner = principal \"$ICRC7_CANISTER\"; subaccount = null;},null, null)" --query
+
+#tranfer from a token to the admin
+echo "tranfer from a token to the admin"
+dfx canister call icrc7 icrc37_transfer_from "(vec{record { 
+  spender = principal \"$ADMIN_PRINCIPAL\";
+  from = record { owner = principal \"$ICRC7_CANISTER\"; subaccount = null}; 
+  to = record { owner = principal \"$ADMIN_PRINCIPAL\"; subaccount = null};
+  token_id =  0 : nat;
+  memo = null;
+  created_at_time = null;}})"
+
+  # Admin should own two tokens
+echo "Admin should own two tokens"
+
+dfx canister call icrc7 icrc7_tokens_of "(record { owner = principal \"$ADMIN_PRINCIPAL\"; subaccount = null}, null, null)" --query
+
+echo "List owner of all tokens"
+# List owner of all tokens
+dfx canister call icrc7 icrc7_owner_of '(vec {0;1;2;3})' --query
+
+cd ..
+
+echo "=========subscribe=================="
+dfx canister call univoice-vmc-backend setup_subscribe "(
+     principal \"bw4dl-smaaa-aaaaa-qaacq-cai\",
+     \"0301008\"
+)"
+
+echo "=========record_work_load========"
+dfx canister call mugc-agc-backend push_workload_record "(
+    record {
+      promt_id = \"086daeb4-3795-486a-8d20-725866f4ded9\";
+      client_id = \"1982027079\";
+      ai_node = \"http://127.0.0.1:8188/prompt\";
+      app_info = \"muse_talk\";
+      wk_id = \"univoice-wk-local.json\";
+      voice_key = \"2f4018e2-ed5e-4821-97ba-4873b431586f/tmp/tmprh7jbr_7.wav\";
+      deduce_asset_key = \"AIGC_output_video_final_00116.mp4\";
+      status = \"executed\" ;
+      gmt_datatime=1731837234   
+    })"
+
+echo "==========query_curr_workload======="
+dfx canister call mugc-agc-backend query_curr_workload
+
+
+

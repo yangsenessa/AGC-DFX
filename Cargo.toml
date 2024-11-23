@@ -1,0 +1,6 @@
+[workspace]
+members = [
+    "univoice-vmc/src/univoice-vmc-backend",
+    "mugc-agc/src/mugc-agc-backend"
+]
+resolver = "2"
