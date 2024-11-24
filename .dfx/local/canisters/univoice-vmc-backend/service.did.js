@@ -1,4 +1,5 @@
 export const idlFactory = ({ IDL }) => {
+  const BlockIndex = IDL.Nat;
   const MinerTxState = IDL.Variant({
     'Claimed' : IDL.Text,
     'Prepared' : IDL.Text,
@@ -16,27 +17,45 @@ export const idlFactory = ({ IDL }) => {
     'promt_id' : IDL.Text,
   });
   const NumTokens = IDL.Nat;
-  const BlockIndex = IDL.Nat;
   const WorkLoadLedgerItem = IDL.Record({
     'mining_status' : MinerTxState,
     'work_load' : ComfyUIPayload,
     'block_tokens' : NumTokens,
     'wkload_id' : BlockIndex,
   });
+  const Account = IDL.Record({
+    'owner' : IDL.Principal,
+    'subaccount' : IDL.Opt(IDL.Vec(IDL.Nat8)),
+  });
+  const TxIndex = IDL.Nat;
+  const TransferTxState = IDL.Variant({
+    'Claimed' : IDL.Null,
+    'WaitClaim' : IDL.Null,
+  });
+  const UnvMinnerLedgerRecord = IDL.Record({
+    'block_index' : IDL.Opt(BlockIndex),
+    'meta_workload' : WorkLoadLedgerItem,
+    'minner' : Account,
+    'trans_tx_index' : IDL.Opt(TxIndex),
+    'biz_state' : TransferTxState,
+    'tokens' : NumTokens,
+    'gmt_datetime' : Timestamp,
+  });
   const Event0301008 = IDL.Record({
     'topic' : IDL.Text,
     'payload' : WorkLoadLedgerItem,
   });
   const Result = IDL.Variant({ 'Ok' : IDL.Nat, 'Err' : IDL.Text });
-  const Account = IDL.Record({
-    'owner' : IDL.Principal,
-    'subaccount' : IDL.Opt(IDL.Vec(IDL.Nat8)),
-  });
   const TransferArgs = IDL.Record({
     'to_account' : Account,
     'amount' : IDL.Nat,
   });
   return IDL.Service({
+    'get_all_miner_jnl' : IDL.Func(
+        [],
+        [IDL.Opt(IDL.Vec(UnvMinnerLedgerRecord))],
+        ['query'],
+      ),
     'greet' : IDL.Func([IDL.Text], [IDL.Text], ['query']),
     'publish_0301008' : IDL.Func([Event0301008], [Result], []),
     'query_poll_balance' : IDL.Func([], [Result], ['query']),

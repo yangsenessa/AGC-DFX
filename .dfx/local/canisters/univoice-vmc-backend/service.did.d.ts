@@ -30,6 +30,18 @@ export type Result = { 'Ok' : bigint } |
 export interface Subscriber { 'topic' : string }
 export type Timestamp = bigint;
 export interface TransferArgs { 'to_account' : Account, 'amount' : bigint }
+export type TransferTxState = { 'Claimed' : null } |
+  { 'WaitClaim' : null };
+export type TxIndex = bigint;
+export interface UnvMinnerLedgerRecord {
+  'block_index' : [] | [BlockIndex],
+  'meta_workload' : WorkLoadLedgerItem,
+  'minner' : Account,
+  'trans_tx_index' : [] | [TxIndex],
+  'biz_state' : TransferTxState,
+  'tokens' : NumTokens,
+  'gmt_datetime' : Timestamp,
+}
 export interface WorkLoadLedgerItem {
   'mining_status' : MinerTxState,
   'work_load' : ComfyUIPayload,
@@ -37,6 +49,7 @@ export interface WorkLoadLedgerItem {
   'wkload_id' : BlockIndex,
 }
 export interface _SERVICE {
+  'get_all_miner_jnl' : ActorMethod<[], [] | [Array<UnvMinnerLedgerRecord>]>,
   'greet' : ActorMethod<[string], string>,
   'publish_0301008' : ActorMethod<[Event0301008], Result>,
   'query_poll_balance' : ActorMethod<[], Result>,

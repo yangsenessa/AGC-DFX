@@ -3,21 +3,25 @@ set -e
 
 echo "===========SETUP tokens========="
 dfx start --background --clean
+dfx identity use minter
+MINT_ACCOUNT=$(dfx identity get-principal)
 dfx identity use univoicetest
+GOV_ACCOUNT=$(dfx identity get-principal)
+
 echo "===========Prepared Univoice Tokens===================="
 dfx deploy icrc1_ledger_canister --argument "(variant {
   Init = record {
     token_symbol = \"UNIVOICE\";
     token_name = \"L-UNIVOICE\";
     minting_account = record {
-      owner = principal \"$(dfx identity --identity anonymous get-principal)\"
+      owner = principal \"$MINT_ACCOUNT\"
     };
     transfer_fee = 10_000;
     metadata = vec {};
     initial_balances = vec {
       record {
         record {
-          owner = principal \"$(dfx identity --identity default get-principal)\";
+          owner = principal \"$GOV_ACCOUNT\";
         };
         10_000_000_000;
       };
@@ -25,7 +29,7 @@ dfx deploy icrc1_ledger_canister --argument "(variant {
     archive_options = record {
       num_blocks_to_archive = 1000;
       trigger_threshold = 2000;
-      controller_id = principal \"$(dfx identity --identity anonymous get-principal)\";
+      controller_id = principal \"$GOV_ACCOUNT\";
     };
     feature_flags = opt record {
       icrc2 = true;
@@ -36,7 +40,7 @@ dfx deploy icrc1_ledger_canister --argument "(variant {
 dfx deploy icrc1_index_canister --argument '(opt variant { Init = record { ledger_id = principal "mxzaz-hqaaa-aaaar-qaada-cai"} })'
 
 dfx canister call icrc1_ledger_canister icrc1_balance_of "(record {
-  owner = principal \"$(dfx identity --identity default get-principal)\";
+  owner = principal \"$GOV_ACCOUNT\";
 })"
 
 echo "===========SETUP DONE========="
@@ -46,6 +50,32 @@ echo "========  MUGC-AGC  ========"
 dfx identity use univoicetest
 dfx deploy  mugc-agc-backend 
 
+# approve the token_transfer_from_backend canister to spend 100 tokens
+#echo "===========icrc2_approve========="
+
+#dfx canister call  icrc1_ledger_canister icrc2_approve "(
+#  record {
+ #   spender= record {
+ #     owner = principal \"$(dfx canister id univoice-vmc-backend)\";
+ #   };
+ #   amount = 10_000_000_000: nat;
+ # }
+#)"
+echo "===========icrc2_approve_end========="
+
+
+
+
+echo "===========query balance inner========"
+dfx canister call univoice-vmc-backend query_poll_balance
+
+
+
+echo "===========icrc2_claim_end ========="
+
+
+
+
 echo "========update contract======"
 dfx canister call mugc-agc-backend update_minting_contract "(
    record {
@@ -54,6 +84,8 @@ dfx canister call mugc-agc-backend update_minting_contract "(
       token_block=1000
    }
 )"
+
+
 
 
 echo  "========DEPLOY NFT=========="
@@ -228,6 +260,24 @@ dfx canister call mugc-agc-backend push_workload_record "(
 
 echo "==========query_curr_workload======="
 dfx canister call mugc-agc-backend query_curr_workload
+
+echo "===========icrc2_claim_query ========="
+dfx canister call univoice-vmc-backend get_all_miner_jnl
+
+echo "==============TOKEN TRANSFER=================="
+
+dfx canister call  univoice-vmc-backend transfer "(record {
+  amount = 100_000_000;
+  to_account = record {
+   owner = principal \"$(dfx canister id univoice-vmc-backend)\";  };
+})"
+
+echo "===========icrc2_claim ========="
+
+
+
+
+
 
 
 
