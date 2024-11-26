@@ -21,6 +21,8 @@ export const idlFactory = ({ IDL }) => {
     'mining_status' : MinerTxState,
     'work_load' : ComfyUIPayload,
     'block_tokens' : NumTokens,
+    'nft_pool' : IDL.Text,
+    'token_pool' : IDL.Text,
     'wkload_id' : BlockIndex,
   });
   const Account = IDL.Record({

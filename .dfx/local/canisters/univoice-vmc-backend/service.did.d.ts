@@ -46,6 +46,8 @@ export interface WorkLoadLedgerItem {
   'mining_status' : MinerTxState,
   'work_load' : ComfyUIPayload,
   'block_tokens' : NumTokens,
+  'nft_pool' : string,
+  'token_pool' : string,
   'wkload_id' : BlockIndex,
 }
 export interface _SERVICE {

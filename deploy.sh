@@ -16,7 +16,7 @@ dfx deploy icrc1_ledger_canister --argument "(variant {
     minting_account = record {
       owner = principal \"$MINT_ACCOUNT\"
     };
-    transfer_fee = 10_000;
+    transfer_fee = 10;
     metadata = vec {};
     initial_balances = vec {
       record {
@@ -51,28 +51,17 @@ dfx identity use univoicetest
 dfx deploy  mugc-agc-backend 
 
 # approve the token_transfer_from_backend canister to spend 100 tokens
-#echo "===========icrc2_approve========="
+echo "===========icrc2_approve========="
 
-#dfx canister call  icrc1_ledger_canister icrc2_approve "(
-#  record {
- #   spender= record {
- #     owner = principal \"$(dfx canister id univoice-vmc-backend)\";
- #   };
- #   amount = 10_000_000_000: nat;
- # }
-#)"
+dfx canister call  icrc1_ledger_canister icrc2_approve "(
+  record {
+    spender= record {
+      owner = principal \"$(dfx canister id univoice-vmc-backend)\";
+    };
+    amount = 10_000_000_000: nat;
+  }
+)"
 echo "===========icrc2_approve_end========="
-
-
-
-
-echo "===========query balance inner========"
-dfx canister call univoice-vmc-backend query_poll_balance
-
-
-
-echo "===========icrc2_claim_end ========="
-
 
 
 
@@ -213,6 +202,11 @@ dfx canister call icrc7 icrc7_tokens_of "(record { owner = principal \"$ICRC7_CA
 echo "Should be approved to transfer"
 dfx canister call icrc7 icrc37_is_approved "(vec{record { spender=record {owner = principal \"$ADMIN_PRINCIPAL\"; subaccount = null;}; from_subaccount=null; token_id=0;}})" --query
 
+#Should be approved to transfer
+echo "Should be approved to transfer"
+dfx canister call icrc7 icrc37_is_approved "(vec{record { spender=record {owner = principal \"$ADMIN_PRINCIPAL\"; subaccount = null;}; from_subaccount=null; token_id=1;}})" --query
+
+
 #Check that the owner is spender
 echo "Check that the owner is spender"
 dfx canister call icrc7 icrc37_get_collection_approvals "(record { owner = principal \"$ICRC7_CANISTER\"; subaccount = null;},null, null)" --query
@@ -227,6 +221,14 @@ dfx canister call icrc7 icrc37_transfer_from "(vec{record {
   memo = null;
   created_at_time = null;}})"
 
+  dfx canister call icrc7 icrc37_transfer_from "(vec{record { 
+  spender = principal \"$ADMIN_PRINCIPAL\";
+  from = record { owner = principal \"$ICRC7_CANISTER\"; subaccount = null}; 
+  to = record { owner = principal \"$ADMIN_PRINCIPAL\"; subaccount = null};
+  token_id =  1 : nat;
+  memo = null;
+  created_at_time = null;}})"
+
   # Admin should own two tokens
 echo "Admin should own two tokens"
 
@@ -237,6 +239,17 @@ echo "List owner of all tokens"
 dfx canister call icrc7 icrc7_owner_of '(vec {0;1;2;3})' --query
 
 cd ..
+
+#echo "==============TOKEN TRANSFER=================="
+
+dfx canister call  univoice-vmc-backend transfer "(record {
+  amount = 6_500_000_000;
+  to_account = record {
+   owner = principal \"$(dfx canister id univoice-vmc-backend)\";  };
+})"
+
+echo "===========query balance inner========"
+dfx canister call univoice-vmc-backend query_poll_balance --network local
 
 echo "=========subscribe=================="
 dfx canister call univoice-vmc-backend setup_subscribe "(
@@ -258,21 +271,17 @@ dfx canister call mugc-agc-backend push_workload_record "(
       gmt_datatime=1731837234   
     })"
 
+
+
 echo "==========query_curr_workload======="
 dfx canister call mugc-agc-backend query_curr_workload
 
 echo "===========icrc2_claim_query ========="
 dfx canister call univoice-vmc-backend get_all_miner_jnl
 
-echo "==============TOKEN TRANSFER=================="
 
-dfx canister call  univoice-vmc-backend transfer "(record {
-  amount = 100_000_000;
-  to_account = record {
-   owner = principal \"$(dfx canister id univoice-vmc-backend)\";  };
-})"
 
-echo "===========icrc2_claim ========="
+echo "===========icrc2_claim ... ========="
 
 
 
