@@ -1,5 +1,6 @@
 export const idlFactory = ({ IDL }) => {
   const BlockIndex = IDL.Nat;
+  const Result = IDL.Variant({ 'Ok' : IDL.Nat, 'Err' : IDL.Text });
   const MinerTxState = IDL.Variant({
     'Claimed' : IDL.Text,
     'Prepared' : IDL.Text,
@@ -47,12 +48,12 @@ export const idlFactory = ({ IDL }) => {
     'topic' : IDL.Text,
     'payload' : WorkLoadLedgerItem,
   });
-  const Result = IDL.Variant({ 'Ok' : IDL.Nat, 'Err' : IDL.Text });
   const TransferArgs = IDL.Record({
     'to_account' : Account,
     'amount' : IDL.Nat,
   });
   return IDL.Service({
+    'claim_to_account_from_index' : IDL.Func([BlockIndex], [Result], []),
     'get_all_miner_jnl' : IDL.Func(
         [],
         [IDL.Opt(IDL.Vec(UnvMinnerLedgerRecord))],

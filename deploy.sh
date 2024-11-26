@@ -39,6 +39,7 @@ dfx deploy icrc1_ledger_canister --argument "(variant {
 
 dfx deploy icrc1_index_canister --argument '(opt variant { Init = record { ledger_id = principal "mxzaz-hqaaa-aaaar-qaada-cai"} })'
 
+echo "===========balance of GOV_ACCOUNT========="
 dfx canister call icrc1_ledger_canister icrc1_balance_of "(record {
   owner = principal \"$GOV_ACCOUNT\";
 })"
@@ -63,6 +64,13 @@ dfx canister call  icrc1_ledger_canister icrc2_approve "(
 )"
 echo "===========icrc2_approve_end========="
 
+echo "===========balance approve==========="
+
+dfx canister call icrc1_ledger_canister icrc1_balance_of "(record {
+  owner = principal \"$(dfx canister id univoice-vmc-backend)\"
+})"
+
+
 
 
 echo "========update contract======"
@@ -86,9 +94,6 @@ dfx identity use bob
 BOB_PRINCIPAL=$(dfx identity get-principal)
 
 
-dfx identity use icrc7_deployer
-
-ADMIN_PRINCIPAL=$(dfx identity get-principal)
 dfx identity use univoicetest
 ADMIN_PRINCIPAL=$(dfx identity get-principal)
 
@@ -202,10 +207,6 @@ dfx canister call icrc7 icrc7_tokens_of "(record { owner = principal \"$ICRC7_CA
 echo "Should be approved to transfer"
 dfx canister call icrc7 icrc37_is_approved "(vec{record { spender=record {owner = principal \"$ADMIN_PRINCIPAL\"; subaccount = null;}; from_subaccount=null; token_id=0;}})" --query
 
-#Should be approved to transfer
-echo "Should be approved to transfer"
-dfx canister call icrc7 icrc37_is_approved "(vec{record { spender=record {owner = principal \"$ADMIN_PRINCIPAL\"; subaccount = null;}; from_subaccount=null; token_id=1;}})" --query
-
 
 #Check that the owner is spender
 echo "Check that the owner is spender"
@@ -282,6 +283,25 @@ dfx canister call univoice-vmc-backend get_all_miner_jnl
 
 
 echo "===========icrc2_claim ... ========="
+
+echo "============balance-before ========="
+dfx canister call icrc1_ledger_canister icrc1_balance_of "(record {
+  owner = principal \"$ADMIN_PRINCIPAL\";
+})"
+echo "============canister balance====================="
+dfx canister call icrc1_ledger_canister icrc1_balance_of "(record {
+  owner = principal \"$(dfx canister id univoice-vmc-backend)\"
+})"
+dfx canister call  univoice-vmc-backend claim_to_account_from_index "(1)"
+
+echo "============balance-end ========="
+dfx canister call icrc1_ledger_canister icrc1_balance_of "(record {
+  owner = principal \"$ADMIN_PRINCIPAL\";
+})"
+echo "============canister balance====================="
+dfx canister call icrc1_ledger_canister icrc1_balance_of "(record {
+  owner = principal \"$(dfx canister id univoice-vmc-backend)\"
+})"
 
 
 

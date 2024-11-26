@@ -51,6 +51,7 @@ export interface WorkLoadLedgerItem {
   'wkload_id' : BlockIndex,
 }
 export interface _SERVICE {
+  'claim_to_account_from_index' : ActorMethod<[BlockIndex], Result>,
   'get_all_miner_jnl' : ActorMethod<[], [] | [Array<UnvMinnerLedgerRecord>]>,
   'greet' : ActorMethod<[string], string>,
   'publish_0301008' : ActorMethod<[Event0301008], Result>,
