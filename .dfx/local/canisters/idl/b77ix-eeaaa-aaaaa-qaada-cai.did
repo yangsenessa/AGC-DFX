@@ -1,0 +1,71 @@
+
+type TransferArgs = record { to_account : Account; amount : nat };
+type Account = record { owner : principal; subaccount : opt blob };
+type Result = variant { Ok : nat; Err : text };
+type BlockIndex = nat;
+type NumTokens = nat;
+type TxIndex = nat;
+type Timestamp = nat64;
+
+type Subscriber = record {
+    topic:text;
+  };
+type MinerTxState = variant {
+   Prepared:text;
+   Claimed:text;
+};
+
+type TransferTxState = variant {
+   WaitClaim;
+    Claimed;
+};
+
+type ComfyUIPayload =
+  record {
+    promt_id:text;
+    client_id:text;
+    ai_node:text;
+    app_info:text;
+    wk_id:text;
+    voice_key:text;
+    deduce_asset_key:text;
+    status:text;
+    gmt_datatime:Timestamp;
+  };
+
+type WorkLoadLedgerItem =
+  record {
+    wkload_id : BlockIndex;
+    work_load : ComfyUIPayload;
+    block_tokens: NumTokens;
+    token_pool:text;
+    nft_pool:text;
+    mining_status : MinerTxState;
+  };
+
+type Event0301008 = record {
+  topic:text;
+  payload:WorkLoadLedgerItem;
+
+};
+
+type UnvMinnerLedgerRecord= record {
+     minner:Account;
+     meta_workload:WorkLoadLedgerItem;
+     block_index:opt BlockIndex;
+     trans_tx_index:opt TxIndex;
+     tokens:NumTokens;
+     gmt_datetime:Timestamp;
+     biz_state:TransferTxState;
+
+};
+
+service : {
+    "greet": (text) -> (text) query;
+    "transfer" : (TransferArgs) -> (Result);
+    "query_poll_balance" :() -> (Result) query;
+    "setup_subscribe": (principal,text) -> ();
+    "publish_0301008":(Event0301008) ->(Result);
+    "get_all_miner_jnl":() ->(opt vec  UnvMinnerLedgerRecord) query;
+    "claim_to_account_from_index":(BlockIndex) ->(Result)
+};

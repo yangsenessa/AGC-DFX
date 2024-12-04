@@ -258,19 +258,19 @@ dfx canister call univoice-vmc-backend setup_subscribe "(
      \"0301008\"
 )"
 
-echo "=========record_work_load========"
-dfx canister call mugc-agc-backend push_workload_record "(
-    record {
-      promt_id = \"086daeb4-3795-486a-8d20-725866f4ded9\";
-      client_id = \"1982027079\";
-      ai_node = \"http://127.0.0.1:8188/prompt\";
-      app_info = \"muse_talk\";
-      wk_id = \"univoice-wk-local.json\";
-      voice_key = \"2f4018e2-ed5e-4821-97ba-4873b431586f/tmp/tmprh7jbr_7.wav\";
-      deduce_asset_key = \"AIGC_output_video_final_00116.mp4\";
-      status = \"executed\" ;
-      gmt_datatime=1731837234   
-    })"
+#echo "=========record_work_load========"
+#dfx canister call mugc-agc-backend push_workload_record "(
+#    record {
+#      promt_id = \"086daeb4-3795-486a-8d20-725866f4ded9\";
+#      client_id = \"1982027079\";
+#      ai_node = \"http://127.0.0.1:8188/prompt\";
+#      app_info = \"muse_talk\";
+#      wk_id = \"univoice-wk-local.json\";
+#      voice_key = \"2f4018e2-ed5e-4821-97ba-4873b431586f/tmp/tmprh7jbr_7.wav\";
+#      deduce_asset_key = \"AIGC_output_video_final_00116.mp4\";
+#      status = \"executed\" ;
+#      gmt_datatime=1731837234   
+#    })"
 
 
 
