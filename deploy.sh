@@ -197,7 +197,6 @@ dfx canister call icrc7 icrcX_mint "(
   }
 )"
 
-dfx canister call icrc7 icrc7_tokens_of "(record { owner = principal \"$ICRC7_CANISTER\"; subaccount = null;},null,null)"
 
 #All tokens should be owned by the canister
 echo "All tokens should be owned by the canister"
@@ -258,19 +257,19 @@ dfx canister call univoice-vmc-backend setup_subscribe "(
      \"0301008\"
 )"
 
-#echo "=========record_work_load========"
-#dfx canister call mugc-agc-backend push_workload_record "(
-#    record {
-#      promt_id = \"086daeb4-3795-486a-8d20-725866f4ded9\";
-#      client_id = \"1982027079\";
-#      ai_node = \"http://127.0.0.1:8188/prompt\";
-#      app_info = \"muse_talk\";
-#      wk_id = \"univoice-wk-local.json\";
-#      voice_key = \"2f4018e2-ed5e-4821-97ba-4873b431586f/tmp/tmprh7jbr_7.wav\";
-#      deduce_asset_key = \"AIGC_output_video_final_00116.mp4\";
-#      status = \"executed\" ;
-#      gmt_datatime=1731837234   
-#    })"
+echo "=========record_work_load========"
+dfx canister call mugc-agc-backend push_workload_record "(
+    record {
+      promt_id = \"086daeb4-3795-486a-8d20-725866f4ded9\";
+      client_id = \"1982027079\";
+      ai_node = \"http://127.0.0.1:8188/prompt\";
+      app_info = \"muse_talk\";
+      wk_id = \"univoice-wk-local.json\";
+      voice_key = \"2f4018e2-ed5e-4821-97ba-4873b431586f/tmp/tmprh7jbr_7.wav\";
+      deduce_asset_key = \"AIGC_output_video_final_00116.mp4\";
+      status = \"executed\" ;
+      gmt_datatime=1731837234   
+    })"
 
 
 
@@ -284,15 +283,20 @@ dfx canister call univoice-vmc-backend get_all_miner_jnl
 
 echo "===========icrc2_claim ... ========="
 
-echo "============balance-before ========="
+echo "============balance-admin ========="
 dfx canister call icrc1_ledger_canister icrc1_balance_of "(record {
   owner = principal \"$ADMIN_PRINCIPAL\";
 })"
-echo "============canister balance====================="
+echo "============canister balance before====================="
 dfx canister call icrc1_ledger_canister icrc1_balance_of "(record {
   owner = principal \"$(dfx canister id univoice-vmc-backend)\"
 })"
+
+echo "============ claim index {1} {2}"
 dfx canister call  univoice-vmc-backend claim_to_account_from_index "(1)"
+
+dfx canister call  univoice-vmc-backend claim_to_account_from_index "(2)"
+
 
 echo "============balance-end ========="
 dfx canister call icrc1_ledger_canister icrc1_balance_of "(record {
@@ -302,6 +306,10 @@ echo "============canister balance====================="
 dfx canister call icrc1_ledger_canister icrc1_balance_of "(record {
   owner = principal \"$(dfx canister id univoice-vmc-backend)\"
 })"
+
+
+echo "===========icrc2_claim_query after claimed ========="
+dfx canister call univoice-vmc-backend get_all_miner_jnl
 
 
 
