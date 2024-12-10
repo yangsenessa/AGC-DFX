@@ -15,14 +15,14 @@
     "artifact_pool": {
       "consensus_pool_path": "/root/univoice/icp/AGC-DFX/.dfx/network/local/state/consensus_pool"
     },
-    "subnet_type": "system",
+    "subnet_type": "application",
     "btc_adapter": {
       "enabled": false,
       "socket_path": null
     },
     "canister_http_adapter": {
       "enabled": true,
-      "socket_path": "/tmp/ic-https-outcalls-adapter-socket.211821.1733650805"
+      "socket_path": "/tmp/ic-https-outcalls-adapter-socket.275751.1733844678"
     },
     "log_level": "error",
     "artificial_delay": 600,

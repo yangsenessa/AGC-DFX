@@ -58,7 +58,7 @@ dfx canister call  icrc1_ledger_canister icrc2_approve "(
   record {
     spender= record {
       owner = principal \"$(dfx canister id univoice-vmc-backend)\";
-    };
+   };
     amount = 10_000_000_000: nat;
   }
 )"
@@ -78,7 +78,7 @@ dfx canister call mugc-agc-backend update_minting_contract "(
    record {
       poll_account=\"mxzaz-hqaaa-aaaar-qaada-cai\";
       nft_collection_id=\"bkyz2-fmaaa-aaaaa-qaaaq-cai\";
-      token_block=1000
+      token_block=1
    }
 )"
 
@@ -225,7 +225,7 @@ dfx canister call icrc7 icrc37_transfer_from "(vec{record {
   spender = principal \"$ADMIN_PRINCIPAL\";
   from = record { owner = principal \"$ICRC7_CANISTER\"; subaccount = null}; 
   to = record { owner = principal \"$ADMIN_PRINCIPAL\"; subaccount = null};
-  token_id =  1 : nat;
+  token_id =  10_000 : nat;
   memo = null;
   created_at_time = null;}})"
 

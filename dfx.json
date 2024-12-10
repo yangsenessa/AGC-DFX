@@ -64,7 +64,7 @@
       "packtool": ""
     },
     "replica": {
-      "subnet_type": "system"
+      "subnet_type": "application"
     }
   },
   "networks": {

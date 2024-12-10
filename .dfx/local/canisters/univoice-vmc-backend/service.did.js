@@ -61,7 +61,7 @@ export const idlFactory = ({ IDL }) => {
       ),
     'greet' : IDL.Func([IDL.Text], [IDL.Text], ['query']),
     'publish_0301008' : IDL.Func([Event0301008], [Result], []),
-    'query_poll_balance' : IDL.Func([], [Result], ['query']),
+    'query_poll_balance' : IDL.Func([], [Result], []),
     'setup_subscribe' : IDL.Func([IDL.Principal, IDL.Text], [], []),
     'transfer' : IDL.Func([TransferArgs], [Result], []),
   });
