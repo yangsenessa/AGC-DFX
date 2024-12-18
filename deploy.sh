@@ -11,8 +11,8 @@ GOV_ACCOUNT=$(dfx identity get-principal)
 echo "===========Prepared Univoice Tokens===================="
 dfx deploy icrc1_ledger_canister --argument "(variant {
   Init = record {
-    token_symbol = \"UNIVOICE\";
-    token_name = \"L-UNIVOICE\";
+    token_symbol = \"$VOICE\";
+    token_name = \"VOICE\";
     minting_account = record {
       owner = principal \"$MINT_ACCOUNT\"
     };
@@ -23,7 +23,7 @@ dfx deploy icrc1_ledger_canister --argument "(variant {
         record {
           owner = principal \"$GOV_ACCOUNT\";
         };
-        10_000_000_000;
+        2_100_000_000_000_000;
       };
     };
     archive_options = record {
@@ -37,7 +37,7 @@ dfx deploy icrc1_ledger_canister --argument "(variant {
   }
 })"
 
-dfx deploy icrc1_index_canister --argument '(opt variant { Init = record { ledger_id = principal "mxzaz-hqaaa-aaaar-qaada-cai"} })'
+dfx deploy icrc1_index_canister --argument '(opt variant { Init = record { ledger_id = principal "bkyz2-fmaaa-aaaaa-qaaaq-cai"} })'
 
 echo "===========balance of GOV_ACCOUNT========="
 dfx canister call icrc1_ledger_canister icrc1_balance_of "(record {
@@ -59,7 +59,7 @@ dfx canister call  icrc1_ledger_canister icrc2_approve "(
     spender= record {
       owner = principal \"$(dfx canister id univoice-vmc-backend)\";
    };
-    amount = 10_000_000_000: nat;
+    amount = 1_365_000_000_000_000: nat;
   }
 )"
 echo "===========icrc2_approve_end========="
@@ -76,7 +76,7 @@ dfx canister call icrc1_ledger_canister icrc1_balance_of "(record {
 echo "========update contract======"
 dfx canister call mugc-agc-backend update_minting_contract "(
    record {
-      poll_account=\"mxzaz-hqaaa-aaaar-qaada-cai\";
+      poll_account=\"6nimk-xpves-34bk3-zf7dp-nykqv-h3ady-iu3ze-xplot-vm4uy-ptbel-3qe\";
       nft_collection_id=\"bkyz2-fmaaa-aaaaa-qaaaq-cai\";
       token_block=1000
    }
@@ -250,11 +250,11 @@ cd ..
 
 #echo "==============TOKEN TRANSFER=================="
 
-dfx canister call  univoice-vmc-backend transfer "(record {
-  amount = 6_500_000_000;
-  to_account = record {
-   owner = principal \"$(dfx canister id univoice-vmc-backend)\";  };
-})"
+#dfx canister call  univoice-vmc-backend transfer "(record {
+#   amount = 6_500_000_000;
+#   to_account = record {
+#   owner = principal \"principal \"$ADMIN_PRINCIPAL\";  };
+#})"
 
 echo "===========query balance inner========"
 dfx canister call univoice-vmc-backend query_poll_balance --network local

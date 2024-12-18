@@ -24,6 +24,7 @@ export interface Event0301008 {
 }
 export type MinerTxState = { 'Claimed' : string } |
   { 'Prepared' : string };
+export interface NftUnivoicePricipal { 'owners' : Array<string> }
 export type NumTokens = bigint;
 export type Result = { 'Ok' : bigint } |
   { 'Err' : string };
@@ -51,6 +52,7 @@ export interface WorkLoadLedgerItem {
   'wkload_id' : BlockIndex,
 }
 export interface _SERVICE {
+  'call_unvoice_for_ext_nft' : ActorMethod<[NftUnivoicePricipal], Result>,
   'claim_to_account_from_index' : ActorMethod<[BlockIndex], Result>,
   'get_all_miner_jnl' : ActorMethod<[], [] | [Array<UnvMinnerLedgerRecord>]>,
   'greet' : ActorMethod<[string], string>,

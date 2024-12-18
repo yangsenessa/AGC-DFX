@@ -1,6 +1,7 @@
 export const idlFactory = ({ IDL }) => {
-  const BlockIndex = IDL.Nat;
+  const NftUnivoicePricipal = IDL.Record({ 'owners' : IDL.Vec(IDL.Text) });
   const Result = IDL.Variant({ 'Ok' : IDL.Nat, 'Err' : IDL.Text });
+  const BlockIndex = IDL.Nat;
   const MinerTxState = IDL.Variant({
     'Claimed' : IDL.Text,
     'Prepared' : IDL.Text,
@@ -53,6 +54,7 @@ export const idlFactory = ({ IDL }) => {
     'amount' : IDL.Nat,
   });
   return IDL.Service({
+    'call_unvoice_for_ext_nft' : IDL.Func([NftUnivoicePricipal], [Result], []),
     'claim_to_account_from_index' : IDL.Func([BlockIndex], [Result], []),
     'get_all_miner_jnl' : IDL.Func(
         [],
