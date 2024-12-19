@@ -78,7 +78,7 @@ dfx canister call mugc-agc-backend update_minting_contract "(
    record {
       poll_account=\"6nimk-xpves-34bk3-zf7dp-nykqv-h3ady-iu3ze-xplot-vm4uy-ptbel-3qe\";
       nft_collection_id=\"bkyz2-fmaaa-aaaaa-qaaaq-cai\";
-      token_block=1000
+      token_block=2_625_000
    }
 )"
 
@@ -216,7 +216,7 @@ echo "tranfer from a token to the admin"
 dfx canister call icrc7 icrc37_transfer_from "(vec{record { 
   spender = principal \"$ADMIN_PRINCIPAL\";
   from = record { owner = principal \"$ICRC7_CANISTER\"; subaccount = null}; 
-  to = record { owner = principal \"$ADMIN_PRINCIPAL\"; subaccount = null};
+  to = record { owner = principal \"$ALICE_PRINCIPAL\"; subaccount = null};
   token_id =  0 : nat;
   memo = null;
   created_at_time = null;}})"
@@ -224,7 +224,7 @@ dfx canister call icrc7 icrc37_transfer_from "(vec{record {
 dfx canister call icrc7 icrc37_transfer_from "(vec{record { 
   spender = principal \"$ADMIN_PRINCIPAL\";
   from = record { owner = principal \"$ICRC7_CANISTER\"; subaccount = null}; 
-  to = record { owner = principal \"$ADMIN_PRINCIPAL\"; subaccount = null};
+  to = record { owner = principal \"mavpv-uegot-nsxdf-buehx-6ra72-itrat-tc5ox-m6evr-kqxmy-khd4t-rqe\"; subaccount = null};
   token_id =  2 : nat;
   memo = null;
   created_at_time = null;}})"
@@ -232,7 +232,7 @@ dfx canister call icrc7 icrc37_transfer_from "(vec{record {
 dfx canister call icrc7 icrc37_transfer_from "(vec{record { 
   spender = principal \"$ADMIN_PRINCIPAL\";
   from = record { owner = principal \"$ICRC7_CANISTER\"; subaccount = null}; 
-  to = record { owner = principal \"$ADMIN_PRINCIPAL\"; subaccount = null};
+  to = record { owner = principal \"$BOB_PRINCIPAL\"; subaccount = null};
   token_id =  3 : nat;
   memo = null;
   created_at_time = null;}})"
@@ -300,24 +300,27 @@ dfx canister call univoice-vmc-backend get_all_miner_jnl
 #  owner = principal \"$(dfx canister id univoice-vmc-backend)\"
 #})"
 
-#echo "============ claim index {1} {2}"
-#dfx canister call  univoice-vmc-backend claim_to_account_from_index "(1)"
+echo "============ claim index {1} {2}"
+dfx canister call  univoice-vmc-backend claim_to_account_from_index "(1)"
 
-#dfx canister call  univoice-vmc-backend claim_to_account_from_index "(2)"
+dfx canister call  univoice-vmc-backend claim_to_account_from_index "(2)"
 
-
-#echo "============balance-end ========="
-#dfx canister call icrc1_ledger_canister icrc1_balance_of "(record {
-#  owner = principal \"$ADMIN_PRINCIPAL\";
-#})"
-#echo "============canister balance====================="
-#dfx canister call icrc1_ledger_canister icrc1_balance_of "(record {
-#  owner = principal \"$(dfx canister id univoice-vmc-backend)\"
-#})"
+dfx canister call  univoice-vmc-backend claim_to_account_from_index "(3)"
 
 
-#echo "===========icrc2_claim_query after claimed ========="
-#dfx canister call univoice-vmc-backend get_all_miner_jnl
+
+echo "============balance-end ========="
+dfx canister call icrc1_ledger_canister icrc1_balance_of "(record {
+  owner = principal \"$ADMIN_PRINCIPAL\";
+})"
+echo "============canister balance====================="
+dfx canister call icrc1_ledger_canister icrc1_balance_of "(record {
+  owner = principal \"$(dfx canister id univoice-vmc-backend)\"
+})"
+
+
+echo "===========icrc2_claim_query after claimed ========="
+dfx canister call univoice-vmc-backend get_all_miner_jnl
 
 
 
