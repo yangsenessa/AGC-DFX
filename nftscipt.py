@@ -37,7 +37,7 @@ def creat_record_item(i:int, principal:str)->str:
 i = 0
 records:str = ""
 
-while i <5000 :
+while i <3000 :
     record_item = creat_record_item(i,'bkyz2-fmaaa-aaaaa-qaaaq-cai')
     records += record_item
     i=i+1
