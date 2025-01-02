@@ -8,6 +8,8 @@ MINT_ACCOUNT=$(dfx identity get-principal)
 dfx identity use univoicerun
 GOV_ACCOUNT=$(dfx identity get-principal)
 
+MINER_ACCOUNT="jzpwm-zsjcq-ugkzp-nr7au-bydmm-c7rqk-tzp2r-gtode-fws2v-ehkfl-cqe"
+
 echo "===========Prepared Univoice Tokens===================="
 dfx deploy voice_ledger_canister --argument "(variant {
   Init = record {
@@ -52,11 +54,16 @@ dfx canister call voice_ledger_canister icrc1_balance_of "(record {
 })"
 
 echo "===========SETUP DONE========="
-dfx deploy  univoice-vmc-backend 
-dfx deploy  univoice-vmc-frontend
+#dfx deploy  univoice-vmc-backend 
+#dfx deploy  univoice-vmc-frontend
+cd univoice-vmc
+dfx deploy
+cd ..
+
 echo "========  MUGC-AGC  ========" 
+cd mugc-agc
 dfx identity use univoicerun
-dfx deploy  mugc-agc-backend 
+dfx deploy
 
 # approve the token_transfer_from_backend canister to spend 100 tokens
 echo "===========icrc2_approve========="
@@ -223,7 +230,7 @@ echo "tranfer from a token to the admin"
 dfx canister call icrc7 icrc37_transfer_from "(vec{record { 
   spender = principal \"$ADMIN_PRINCIPAL\";
   from = record { owner = principal \"$ICRC7_CANISTER\"; subaccount = null}; 
-  to = record { owner = principal \"$ALICE_PRINCIPAL\"; subaccount = null};
+  to = record { owner = principal \"$MINER_ACCOUNT\"; subaccount = null};
   token_id =  0 : nat;
   memo = null;
   created_at_time = null;}})"
@@ -231,7 +238,7 @@ dfx canister call icrc7 icrc37_transfer_from "(vec{record {
 dfx canister call icrc7 icrc37_transfer_from "(vec{record { 
   spender = principal \"$ADMIN_PRINCIPAL\";
   from = record { owner = principal \"$ICRC7_CANISTER\"; subaccount = null}; 
-  to = record { owner = principal \"mavpv-uegot-nsxdf-buehx-6ra72-itrat-tc5ox-m6evr-kqxmy-khd4t-rqe\"; subaccount = null};
+  to = record { owner = principal \"$MINER_ACCOUNT\"; subaccount = null};
   token_id =  2 : nat;
   memo = null;
   created_at_time = null;}})"
@@ -239,7 +246,7 @@ dfx canister call icrc7 icrc37_transfer_from "(vec{record {
 dfx canister call icrc7 icrc37_transfer_from "(vec{record { 
   spender = principal \"$ADMIN_PRINCIPAL\";
   from = record { owner = principal \"$ICRC7_CANISTER\"; subaccount = null}; 
-  to = record { owner = principal \"$BOB_PRINCIPAL\"; subaccount = null};
+  to = record { owner = principal \"$MINER_ACCOUNT\"; subaccount = null};
   token_id =  3 : nat;
   memo = null;
   created_at_time = null;}})"

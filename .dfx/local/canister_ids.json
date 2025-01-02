@@ -1,0 +1,11 @@
+{
+  "__Candid_UI": {
+    "local": "bnz7o-iuaaa-aaaaa-qaaaa-cai"
+  },
+  "voice_index_canister": {
+    "local": "bd3sg-teaaa-aaaaa-qaaba-cai"
+  },
+  "voice_ledger_canister": {
+    "local": "mxzaz-hqaaa-aaaar-qaada-cai"
+  }
+}

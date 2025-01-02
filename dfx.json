@@ -23,8 +23,7 @@
           "name": "candid:service"
         }
       ],
-      "type": "assets",
-      "workspace": "univoice-vmc-frontend"
+      "type": "assets"
     },
     "voice_index_canister": {
       "type": "custom",

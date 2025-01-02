@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@dfinity/principal": "^1.4.0",
+    "@funded-labs/plug-mobile-sdk": "^0.1.3"
+  }
+}
